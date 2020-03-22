@@ -1,0 +1,62 @@
+/*================
+* GLOBAL
+==================*/
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+
+body {
+    font-family: 'Nunito', sans-serif;
+    padding-top: 58px;
+    color: #31393C;
+}
+
+.bg-primary, .btn-primary {
+    background-color: #2176FF !important;
+}
+
+.bg-secondary, .btn-secondary {
+    background-color: #F79824 !important;
+    border-color: #F79824 !important;
+}
+
+.btn-primary:hover {
+    border-color: #2176FF;
+    color: #2176FF;
+    background: white !important;
+}
+.btn-secondary:hover {
+    border-color: #F79824;
+    color: #F79824;
+    background: white !important;
+}
+
+h1 {
+    color: #F79824;
+    font-weight: bold;
+    margin-top: 25px;
+    border-bottom: solid #F79824 1px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+h5 {
+    font-size: 1.4em;
+}
+
+.form-frame {
+    max-width: 320px;
+    margin: auto;
+}
+
+.carousel {
+    max-height: 360px;
+    overflow: hidden;
+}
+
+.carousel-item {
+    max-height: 360px;
+    overflow:hidden;
+}
+
+.carousel-caption {
+    background-color: rgba(0,0,0,0.4);
+}
