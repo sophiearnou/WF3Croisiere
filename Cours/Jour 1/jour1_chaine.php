@@ -3,14 +3,14 @@
 $object = 'une tasse de café';
 $message = 'Je voudrai ' . $object . ' pour bien démarrer la journée.';
 
-//Anti slah pour mettre une apostrophe (c'est une conténation)
+//Anti slah pour mettre une apostrophe (c'est une conténation)__
 $message2 = 'Rien de tel qu\'' . $object . ' pour être en forme.';
 
 //Double quote
 $message2 = "Rien de tel qu'" . $object . ' pour être en forme.';
 
 //Incule une variable dans une chaîne à double quote
-//Attention ne fonctionne pas avec de simple quote (c'est une chaîne)
+//Attention ne fonctionne pas avec de simple quote (c'est une chaîne)__
 $message4 = "Rien de tel qu'$object pour être en forme.";
 
 echo $message;

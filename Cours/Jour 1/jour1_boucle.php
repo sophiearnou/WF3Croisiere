@@ -25,7 +25,7 @@ for ($i = 0; $i < count($commande); ++$i) {
     echo $commande[$i] . '<br/>';
 }
 
-// Foreach = pour chaque élements du tableau
+// Foreach = pour chaque élements du tableau__
 foreach ($commande as $produit) {
     echo $produit . '<br/>';
 }

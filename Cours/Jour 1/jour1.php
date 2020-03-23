@@ -20,7 +20,7 @@
     $estAdmin = true;
 
     /*
-    comenbtaire sur plusieur ligne
+    comenbtaire sur plusieur ligne__
     une variable ne doit pas commencer par un chiffre
     ex: 0var -> erreur
     Peut contenir des underscores _
