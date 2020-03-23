@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>BLABLA
+<html>
 
 <head>
     <meta charset="utf-8" />
