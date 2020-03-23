@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta charset="utf-8" /><!--  bbv -->
+    <<<<<<< HEAD <meta charset="utf-8" />
     <title><?= $title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="assets/css/fontawesome.min.css">
     <link rel="stylesheet" href="assets/css/solid.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    =======
+    <meta charset="utf-8" />
+    <title><?= $title ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <<<<<<< HEAD <!-- Bootstrap CSS -->
+        =======
+        <!-- Bootstrap CSS -->
+        >>>>>>> 72a696c624417763a6d833f86cf133d9e2e47cf0
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+        <link rel="stylesheet" href="assets/css/solid.min.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        >>>>>>> fb8d11ac7ea9f97d05bdbc6f1fc8df68a2722387
 </head>
 
 <body>
