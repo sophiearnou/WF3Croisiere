@@ -10,7 +10,7 @@ if ($estAdmin) {
 } else {
     echo "Ne s'affichera jamais";
 }
-//on peut aussi faire elseif____
+//on peut aussi faire elseif__
 ?>
 
 <!DOCTYPE html>

@@ -8,7 +8,7 @@
 
 <body>
     <?php
-    // Déclarer une variable
+    // Déclarer une variable-
     $prenom = "Pierre";
 
     // Nombre sans cote

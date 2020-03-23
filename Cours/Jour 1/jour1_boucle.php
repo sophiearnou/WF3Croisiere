@@ -1,7 +1,7 @@
 <?php
 
 //boucle for
-// tant que i<ou = à 10 et à chaque boucle j'incremente de 1
+// tant que i<ou = à 10 et à chaque boucle j'incremente de 1_
 for ($i = 1; $i <= 10; ++$i) {
     echo $i . '<br/>';
 }

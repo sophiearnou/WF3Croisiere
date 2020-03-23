@@ -3,7 +3,7 @@
 $object = 'une tasse de café';
 $message = 'Je voudrai ' . $object . ' pour bien démarrer la journée.';
 
-//Anti slah pour mettre une apostrophe (c'est une conténation)__
+//Anti slah pour mettre une apostrophe (c'est une conténation)_
 $message2 = 'Rien de tel qu\'' . $object . ' pour être en forme.';
 
 //Double quote
