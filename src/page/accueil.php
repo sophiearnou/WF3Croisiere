@@ -1,8 +1,13 @@
 <?php 
-$title = 'WF3 Croisière';
+$title = 'WF3 Croisière'; // onglet du navigateur
 
 $slides = [];
-ob_start(); ?>
+
+// -4 on charge les destinations
+$destinations = getAllDestinations();
+// var_dump($destinations);
+
+ob_start();//commence à enregistrer le code html attention on oubli pas à la fin du code html $content = ob_get_clean(); ?> //
 <h1>WF3 Croisière</h1>
 
 <div class="row">
@@ -10,11 +15,18 @@ ob_start(); ?>
         <div class="card">
             <div class="card-header">Trouvez votre croisière</div>
             <div class="card-body">
+            <!-- formulaire de recherche -->
                 <form action="index.php" method="GET">
                     <div class="form-group">
                         <label class="form-label">Destination</label>
                         <select name="destination" class="form-control">
                             <option value="">Toutes</option>
+                            <!-- 1-donc boucle sur les destinations( on a pas de variable php qui contient les destinations)-->
+                            <!--1- donc requete donc on va dans model -on cree un nouveau fichier dans model destination.php-->
+                            <!-- 5- boucle ensuite on va faire un recherche donc on va rajouter toutes les croisière qui correspondent à la recherche donc page recherche.php-->
+                   <!-- 5   -->   <?php foreach ($destinations as $destination): ?>
+             <!-- 5-->               <option value="<?=$destination['id']; ?>"><?=$destination['name']; ?></option> 
+           <!-- 5-->              <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -54,6 +66,6 @@ ob_start(); ?>
             <?php endif; ?>
     </div>
 </div>
-<?php $content = ob_get_clean(); ?>
+<?php $content = ob_get_clean();// stock tout le code html enregistrer dans la variable $content qui se trouve dans template.php ?>
 
 <?php require('../template.php'); ?>
