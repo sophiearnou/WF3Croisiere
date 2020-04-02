@@ -1,6 +1,4 @@
-
 <?php
-// 34-on copie la page inscription et on retire des info voir pageconnex.mdn ensuite on va dans user
 
 $title = "S'inscrire";
 
@@ -17,21 +15,11 @@ if (!empty($_POST)) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    //40-
-      if (empty($errors)) { // S'il n'y a pas d'erreur on cree ensuite un page deconnexion
-       $result = login($username, $password);
-
-        if ('success' == $result['type']) {
-            //47 génère un message qui sezra afficher àpres la redirection
-            addFlashMessage('success', $result['message']);
-            
-            header('Location: index.php');
-            exit(); // Arrête le script
-        }
-
+    if (empty($errors)) { // S'il n'y a pas d'erreur
         $errors['global'] = $result['message'];
     }
 }
+
 ob_start();
 ?>
 <h1>Se connecter</h1>

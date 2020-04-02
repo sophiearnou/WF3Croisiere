@@ -15,3 +15,5 @@ function checkAdmin()
 }
 
 require_once('model/database.php');
+//45 ensuite on ira dans template
+require_once 'flashMessage.php';

@@ -34,6 +34,11 @@
                                 <?= $_SESSION['user_username'] ?>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="usermenu">
+                            <!-- 49-menu admin on test notre session admin  ensuite on cree page destination dans admin-->
+                                                               <?php if (isset($_SESSION['user_admin']) && 1 == $_SESSION['user_admin']):?>
+                                        <a href="?p=admin_accueil" class="dropdown-item"><i class="fas fa-cogs"></i> Administration</a>
+                                    <?php endif; ?>
+
                                 <a href="?p=deconnexion" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
                             </div>
                         </li>
@@ -44,11 +49,29 @@
         </nav>
     </header>
     <div class="container">
+    <!-- 46- affichage des message flash -->
+    <?php foreach (getFlashMessage() as $msg):
+        // si le type est "error", on le défini en "danger" pour bootstrap pares page connexion
+          $msg['type'] = (('error' == $msg['type']) ? 'danger' : $msg['type']);
+            ?>
+            <div class="alert alert-<?=$msg['type']; ?> alert-dismissible fade show">
+                <?=$msg['message']; ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <?php endforeach; ?>
         <?= $content ?>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script></script>
+    <script src="assets/js/bs-custom-file-input.min.js"></script>
+        <script>$(document).ready(function () {
+            bsCustomFileInput.init()
+        })</script>
+
 </body>
 
 </html>
+
+

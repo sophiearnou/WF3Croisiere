@@ -1,0 +1,353 @@
+CROISIERE
+
+
+fichier accueil-> <!-- 1-donc boucle sur les destinations( on a pas de variable php qui contient les destinations)-->
+                            <!--1- donc requete donc on va dans model -on cree un nouveau fichier dans model destination.php-->
+
+fichier destination-> // 2- on lie le fichier destination dans database.php
+
+
+fichier database-> // 2- on inclus le nouveau fichier destination.php ensuite on va aller chercher la variable pdo dans destination.php
+		require_once 'destination.php';//reviens à copier/coller le code de destination.php
+
+fichier destination->// 3- retourne toutes les destinations variable glogbale $pdo
+		// donc on a acces à toutes les destinations de database.php
+		function getAllDestinations()
+		{
+   		 global $pdo;
+    		//3- requête donc SELECT * FROM destination ODER BY name
+   		 // requête sans variable donc on utilise $pdo->query
+   		 $request = $pdo->query('SELECT *FROM destination ORDER BY name');
+
+   		 // et on retourne tout les resultats ensuite on retourne dans acceuil
+   		 return $request->fetchAll(); 
+		}
+
+fichier accueil->// -4 on charge les destinations
+		$destinations = getAllDestinations();
+		// var_dump($destinations);
+
+
+fichier accueil->        <!-- 5- boucle ensuite on va faire un recherche donc on va rajouter toutes les croisière qui correspondent à la recherche donc page recherche.php-->
+		<select name="destination" class="form-control">
+                            <option value="">Toutes</option>
+      		  <?php foreach ($destinations as $destination): ?>
+                        	   <option value="<?=$destination['id']; ?>"><?=$destination['name']; ?></option> 
+                 	  <?php endforeach; ?>
+                      	</select>
+
+fichier recherche->// 6 - on mets un titre pour afficher un titre dans l'onglet du navigateur
+		$title = 'recherche';
+
+fichier recherche->//7
+		ob_start();
+
+fichier recherche->//8
+		?>
+		<h1>Résultat de la recherche</h1>
+		<?php
+
+fichier recherche->//9
+		$content=ob_get_clean();
+
+fichier recherche->//10 on mets le lien
+		require_once '../template.php';
+
+fichier recherche->//11- on test si les variables GET pour les recherches existe donc condition ensuite on ajoute un model donc on ajoute dans model un fichier cruise.php
+		if (isset($_GET['destination']) && isset($_GET['date'])) {
+   		 array_map('trim', $_GET); //on retire les espaces
+
+  		  $cruises = searchCruise($_GET['destination'], $_GET['date']);
+  		 // var_dump($cruises);
+		}
+
+fichier cruise->//12- donc on recherche une croisiere
+		// on doit ecrire la requete mais il y a une condition ON DOIT FAIRE ATTENTION CAR ON A UNE DESTINATION OU TOUTES LES DESTINATIONS
+		function searchCruise($destinationId, $dateDeparture)
+		{
+   		 //12a- SELECT * FROM cruise WHERE date_departure >= : date_departure AND destination_id = :destinationId
+    		// Problème quand $destinationId est vide on veut toutes les croisières
+     		//SELECT * FROM cruise WHERE date_departure >= : date_departure
+
+		if ($destinationId >0) {//la condition se fait seuelment si la recherche se fait sur une destination
+      		  $queryStr .= ' AND c.destination_id = :destinationId';
+       		 //la requête va être = à SELECT * FROM cruise WHERE date_departure >= : date_departure AND destination_id = :destinationId
+  		  }
+  		  //12b- on fait un global pdo pour avoir acces à la variable pdo et charger la variable $pdo définie dans database.php
+  		  global $pdo;
+   		 //12c- ensuite on fait la requête
+  		  $request = $pdo->prepare($queryStr);
+  		  $request->bindValue(':dateDeparture', $dateDeparture);
+  		  //12d Refaire un condition pour envoyer le parametre ':destinationId' s'il existe ensuite on fait
+  		  //unrequire_once 'cruise.php'; sur le fichier database
+		   if ($destinationId > 0) {
+ 		       $request->bindValue(':destinationId', $destinationId);
+   		 }
+
+fichier database-> // 13 et ensuite on va dans cruise
+		require_once 'cruise.php';
+
+fichier cruise->//14- ATTENTION DANS LA FUNCTION function searchCruise($destinationId, $dateDeparture) execute la requête $request ON INSERT A LA FIN 
+   		 $request->execute();
+
+   		 return $request->fetchAll();
+
+fichier cruise->TOUJOURS DANS LA FONCTION AVANT CI DESSUS
+	       // 15- on fait des requêtes avec jointure
+   	 // SELECT c.date_departure, c.date_arrival, c.id, c.boat, d.name, d.photo FROM cruise AS c
+   	 // JOIN destination AS d ON d.id = c.destination_id WHERE ...
+
+      	 //  stocker la requête dans une chaine pour l'utiliser la suite ensuite on va sur le fichier recherche
+    	$queryStr = 'SELECT c.date_departure, c.date_arrival, c.id, c.boat, d.name, d.photo
+    	 FROM cruise AS c
+     	JOIN destination AS d ON d.id = c.destination_id
+    	WHERE c.date_departure >= :dateDeparture' ;
+
+fichier recherche->//16- on crée une variable $cruises car elle est défini seulemnt dans la condition donc on doit la redéfinir
+		$cruises =[];
+
+fichier recherche-><!-- 17- on affiche le tableau Affichage des résultatsensuite on va sur inscription.php -->
+		<?php foreach ($cruises as $cruise) : ?>
+		<div class="card my-2">
+   		 <div class="card-body">
+      		  <h2><?=$cruise['name']; ?></h2>
+       		 <div><?=date_format(date_create($cruise['date_departure']), 'd/m/Y'); ?>
+     		   - <?=date_format(date_create($cruise['date_arrival']), 'd/m/Y'); ?></div>
+       		 <div>Navire: <?=$cruise['boat']; ?></div>
+   		 </div>
+		</div>
+		<?php endforeach; ?>
+
+
+fichier inscription->//18 on fait la variable
+		$title = "S'inscrire";//18
+
+		ob_start();//18
+		?>
+		<h1>S'inscrire</h1><!-- 18 -->
+		<?php
+		$content = ob_get_clean();//18
+
+		require_once '../template.php';//18
+
+fichier inscription->//19- test si le formulaire est envoyé 
+		//si la la superglobal post n'est pas vide
+		if (!empty($_POST)) {
+   		 $_POST = array_map('trim', $_POST);
+    		$_POST = array_map('strip_tags', $_POST); // retire les balises html
+
+fichier inscription->  //20- erreurs pour les formulaires
+		$errors = []; // Erreurs pour le formulaire
+   	
+
+fichier inscription-> //20a- erreur formulaire
+  		  if (strlen($_POST['username']) < 4) {
+    		    $errors['username'] = "Le nom d'utilisateur est trop court (min: 4 charactères)";
+ 		   }
+
+ 		   if (strlen($_POST['password']) < 8) {
+      		  $errors['password'] = 'Le mot de passe doit contenir au moins 8 caractères';
+ 		   }
+
+
+fichier inscription-> //20b test si adresse est au bon format
+   		 if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) { // Test si l'adresse email est au bon format
+     		   $errors['email'] = "Votre adresse email n'est pas valide";
+  		  }
+  		  //20b
+  		  // var_dump($errors);
+
+
+
+fichier inscription->   <!-- 21a- condition si username existe et mettre une erreur si n'existe pas-->
+           		 <div class="form-group">
+            		   <!-- 24- on utilise les variables -->
+           		     <input class="form-control <?=isset($errors['username']) ? 'is-invalid' : ''; ?>" placeholder="Nom d'utilisateur" type="text" name="username" value="<?=$username; ?>">
+              	  <?php if (isset($errors['username'])): ?>
+            		    <div class="invalid-feedback">
+                 	   <?=$errors['username']; ?>
+               	 </div>
+            		    <?php endif; ?>
+          		  </div>
+         		    <!-- 21a- condition si email existe et mettre une erreur si n'existe pas-->
+         		   <div class="form-group">
+         		       <input class="form-control <?=isset($errors['email']) ? 'is-invalid' : ''; ?>" placeholder="Adresse email" type="email" name="email" value="<?=$email; ?>">
+          		      <?php if (isset($errors['email'])): ?>
+         		       <div class="invalid-feedback">
+         	           <?=$errors['email']; ?>
+       		         </div>
+        	        <?php endif; ?>
+      		     </div>
+        		     <!-- 21a- condition si password existe et mettre une erreur si n'existe pas-->
+        		    <div class="form-group">
+           		     <input class="form-control <?=isset($errors['password']) ? 'is-invalid' : ''; ?>" placeholder="Mot de passe" type="password" name="password" value="<?=$password; ?>">
+           		     <?php if (isset($errors['password'])): ?>
+          		      <div class="invalid-feedback">
+          		          <?=$errors['password']; ?>
+        		        </div>
+        		        <?php endif; ?>
+      		      </div>
+
+
+
+fichier inscription->//22-on cree des variables $email et $password
+		$username = '';
+		$email = '';
+		$password = '';
+
+fichier inscription->//23 on stock les valeurs POST pour les afficher dans les value des champs
+   		 $username = $_POST['username'];
+  		  $email = $_POST['email'];
+ 		   $password = $_POST['password'];
+
+fichier inscription->//24 VOIR 21A
+
+
+fichier inscription->//25- Ajouter un utilisateur on cree une fonction donc requete donc on va dans model et on cree un fichier user
+
+fichier database->//25arequire_once 'user.php';
+
+fichier user->/**
+	 * 25- donc on ajoute une fonction qui va tester si user existe 
+ 	* on oublie pas de le connecter à database/la fonction retourne 
+	 * si le nom de l'utilisateur OU l'adresse email existe déjà
+	 */
+	function isUserExists($username, $email)
+	{
+ 	   // SELECT * FROM user WHERE username = :username OR email = :email
+	    global $pdo;
+	    $request = $pdo->prepare('SELECT * FROM user WHERE username = :username OR email = :email');
+ 	   $request->bindValue(':username', $username);
+	    $request->bindValue(':email', $email);
+
+ 	   $request->execute();
+ 	   $result = $request->fetch(); // fetch car on a juste besoin d'une ligne
+  	  // fetch retourne false s'il ne trouve pas d'user, et retourne un tableau s'il y en a un
+
+  	  return is_array($result); // Retourne vrai si $result est un tableau
+	}
+
+fichier user->/**
+	 * //26- Ajoute un utilisateur
+	 * @return array va retourner un tableau contenant un message et le type de message
+	 */
+	function addUser($username, $email, $password)
+	{
+   	 global $pdo;
+
+	    if (isUserExists($username, $email)) { // Si l'utilisateur existe on retourne une erreur
+	        return ['message' => "L'utilisateur existe déjà", 'type' => 'error'];
+	    }
+
+ fichier user->   //27- on crypte le mot de passe
+  	  $password = password_hash($password, PASSWORD_DEFAULT);
+ fichier user->	fichier user>//28- requete d'ajout qui prepare
+	    $request = $pdo->prepare('INSERT INTO user (username, email, password) VALUES (:username, :email, :password)');
+
+	//on dit que username = $username
+ 	   $request->bindValue(':username', $username);
+  	  $request->bindValue(':email', $email);
+  	  $request->bindValue(':password', $password);
+
+ fichier user->	fichier user>//29- on execute 
+	    if (!$request->execute()) { // L'execution de la requête ne s'est pas bien déroulé
+
+ fichier user->// 30  	      
+		var_dump($request->errorInfo());  // 30- sert pour afficher l'erreur explicite de pdo pour nous
+
+ fichier user->         //31- dans inscripttion.php on rajouter username
+ 	       return ['message' => 'Une erreur est survenue', 'type' => 'error'];
+  	  }
+
+	    return ['message' => 'Bienvenue', 'type' => 'success'];
+	}
+
+
+ fichier dans inscripttion->if (empty($errors)) { // S'il n'y a pas d'erreur
+      			  $result = addUser($username, $email, $password); // Ajoute l'utilisateur
+      			  //31- ajoute l'utilisateur
+
+     			   //32 si l'utilisateur a bien été ajouté
+       			 if ('success' == $result['type']) { // L'utilisateur a bien été ajouté
+           			 header('Location: index.php');
+      			  }
+
+   			     $errors['global'] = $result['message'];
+  			  }
+
+  fichier dans inscripttion-><!-- 33- on rajoute ensuite on va  dans connexion.php-->
+       		 <?php if (isset($errors['global'])): ?>
+     		   <div class="alert alert-danger"><?=$errors['global']; ?></div>
+  		      <?php endif; ?>
+  		      <form action="" method="post" novalidate>
+
+  fichier dans connexion->// 34-on copie la page inscription et on retire des info voir pageconnex.mdn ensuite on va dans user
+
+ fichier user->//35- 
+	function login($username, $password)
+	{
+ 	   global $pdo;
+ 	  // on test si on trouve un utilisateur à user name
+	   // charge d'abord l'utilisateur par rapport à l'username entré
+	    $request = $pdo->prepare('SELECT * FROM user where username=:username');
+	    $request->bindValue('username', $username);
+	    $request->execute();
+
+	    $user = $request->fetch();
+	// 36- on test si l'utilisateur existe
+	// si l'utilisateur n'existe pas on retourne un tableau
+
+	if (!$user){
+ 	   return ['message'=> "L'utilisateur n'existe pas", 'type' => 'error'];
+ 	   //37- on verifie le mot de pass
+	}
+	   //37- on verifie le mot de pass
+	   //si le mot de passe n'est pas bon
+	   if (!password_verify($password, $user['password'])) {
+ 	      return ['message'=> 'Mot de passe incorrecte', 'type' =>'error'];
+	   }
+
+  
+	   //39-on va se souvenir de 'l'utilisateur donc on utilise les sessions APRES on va sur connexion
+	   $_SESSION['user_id'] = $user['id'];
+	   $_SESSION['user_username'] = $user['username'];
+	   $_SESSION['user_admin'] = $user['admin'];
+
+	    //38- connexion
+	   return ['message' => "Ravi de vous revoir $username", 'type' => 'success'];
+	}
+
+ fichier dans connexion->//40-
+ 	     if (empty($errors)) { // S'il n'y a pas d'erreur on cree ensuite un page deconnexion
+  	      $result = login($username, $password);
+
+   	     if ('success' == $result['type']) {
+    	        header('Location: index.php');
+  	      }
+
+  	      $errors['global'] = $result['message'];
+ 	   }
+
+ fichier dans deconnexion->on cree la page
+	<?php
+
+	//41 on appelle une fonction pour la déconnexion ensuite on va dans user
+
+	logout();//deconnexion
+
+	header('location: index.php');
+
+ fichier user->// 42- déconnexion
+	function logout()
+	{
+ 	   unset($_SESSION['user_id']);
+	    unset($_SESSION['user_username']);
+	    unset($_SESSION['user_admin']);
+	}
+
+
+
+
+
+
+

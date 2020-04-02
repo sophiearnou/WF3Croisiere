@@ -5,3 +5,7 @@ $pdo->exec("SET CHARACTER SET utf8"); // Indique à PDO qu'on veut de l'encodage
 
 // 2- on inclus le nouveau fichier destination.php ensuite on va aller chercher la variable pdo dans destination.php
 require_once 'destination.php';//reviens à copier/coller le code de destination.php
+
+// 13 et ensuite on va dans cruise
+require_once 'cruise.php';
+require_once 'user.php';//25a
